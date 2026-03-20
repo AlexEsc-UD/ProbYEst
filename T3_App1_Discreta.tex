@@ -1,0 +1,250 @@
+\documentclass[12pt,a4paper]{article}
+
+% ── Paquetes ────────────────────────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+
+\geometry{margin=2.5cm}
+
+% ── Colores ─────────────────────────────────────────────────────────────────
+\definecolor{azuluni}{RGB}{0,70,127}
+\definecolor{grisclaro}{RGB}{245,245,245}
+
+% ── Encabezado ──────────────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\textcolor{azuluni}{\small T3 – Probabilidad Conjunta}}
+\lhead{\textcolor{azuluni}{\small Caso Discreto}}
+\rfoot{\thepage}
+
+\titleformat{\section}{\large\bfseries\color{azuluni}}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries\color{azuluni}}{}{0em}{}
+
+% ────────────────────────────────────────────────────────────────────────────
+\begin{document}
+
+% ── Portada ─────────────────────────────────────────────────────────────────
+\begin{titlepage}
+  \centering
+  \vspace*{2cm}
+  {\color{azuluni}\rule{\linewidth}{1.5pt}}\\[0.5cm]
+  {\LARGE\bfseries\color{azuluni}
+   Aplicación 1: Función de Probabilidad Conjunta\\[0.3cm]
+   Caso Discreto}\\[0.3cm]
+  {\color{azuluni}\rule{\linewidth}{1.5pt}}\\[1.5cm]
+
+  {\large\bfseries Tarea T3 – Probabilidad Conjunta}\\[0.4cm]
+  {\large Probabilidad y Estadística}\\[2cm]
+
+  \begin{tabular}{ll}
+    \textbf{Contexto:} & Defectos en producción industrial \\[0.2cm]
+    \textbf{Variables:} & $X$: defectos en turno mañana \quad $Y$: defectos en turno tarde \\[0.2cm]
+    \textbf{Herramientas:} & \LaTeX{} + Python (\texttt{numpy}, \texttt{matplotlib}) \\
+  \end{tabular}
+
+  \vfill
+  {\small\color{gray} Generado con \LaTeX{} y validado con Python}
+\end{titlepage}
+
+% ────────────────────────────────────────────────────────────────────────────
+\section{Planteamiento del Problema}
+
+Una empresa manufacturera registra, en cada jornada laboral, el número de
+piezas defectuosas producidas en el \textbf{turno mañana} ($X$) y en el
+\textbf{turno tarde} ($Y$).  Ambas variables toman valores en
+$\{0, 1, 2\}$ (0 = ninguna, 1 = una, 2 = dos o más).
+
+A partir de datos históricos se construye la siguiente tabla de
+\textbf{distribución de probabilidad conjunta} $P(X=x,\,Y=y)$:
+
+\begin{table}[H]
+\centering
+\caption{Distribución de probabilidad conjunta $P(X=x,\,Y=y)$}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{c|ccc|c}
+\toprule
+\diagbox{$X$}{$Y$} & $y=0$ & $y=1$ & $y=2$ & $P(X=x)$ \\
+\midrule
+$x=0$ & 0.30 & 0.10 & 0.05 & 0.45 \\
+$x=1$ & 0.15 & 0.20 & 0.05 & 0.40 \\
+$x=2$ & 0.05 & 0.05 & 0.05 & 0.15 \\
+\midrule
+$P(Y=y)$ & 0.50 & 0.35 & 0.15 & \textbf{1.00} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ────────────────────────────────────────────────────────────────────────────
+\section{Marco Teórico}
+
+\subsection{Definición – Distribución Conjunta Discreta}
+
+Sean $X$ e $Y$ variables aleatorias discretas definidas en el mismo espacio
+muestral $\Omega$.  La \textbf{función de probabilidad conjunta} se define
+como:
+\[
+  p(x,y) = P(X = x,\; Y = y), \qquad (x,y)\in\mathbb{Z}^{2}.
+\]
+
+Para que $p$ sea válida debe cumplir:
+\begin{enumerate}
+  \item $p(x,y)\geq 0$ para todo $(x,y)$.
+  \item $\displaystyle\sum_{x}\sum_{y} p(x,y) = 1$.
+\end{enumerate}
+
+\subsection{Distribuciones Marginales}
+
+Las distribuciones marginales se obtienen sumando sobre la otra variable:
+\[
+  p_X(x) = \sum_{y} p(x,y), \qquad
+  p_Y(y) = \sum_{x} p(x,y).
+\]
+
+\subsection{Independencia}
+
+$X$ e $Y$ son \textbf{independientes} si y solo si:
+\[
+  p(x,y) = p_X(x)\cdot p_Y(y) \quad \forall\,(x,y).
+\]
+
+\subsection{Esperanza, Varianza y Covarianza}
+
+\[
+  E[X] = \sum_{x} x\,p_X(x), \quad
+  \text{Var}(X) = E[X^2] - (E[X])^2.
+\]
+\[
+  \text{Cov}(X,Y) = E[XY] - E[X]\,E[Y], \qquad
+  E[XY] = \sum_{x}\sum_{y} xy\,p(x,y).
+\]
+\[
+  \rho_{XY} = \frac{\text{Cov}(X,Y)}{\sqrt{\text{Var}(X)\,\text{Var}(Y)}}.
+\]
+
+% ────────────────────────────────────────────────────────────────────────────
+\section{Desarrollo Analítico}
+
+\subsection{Verificación de la Distribución Conjunta}
+
+\[
+  \sum_{x=0}^{2}\sum_{y=0}^{2} p(x,y)
+  = 0.30+0.10+0.05+0.15+0.20+0.05+0.05+0.05+0.05 = \mathbf{1.00} \checkmark
+\]
+
+\subsection{Distribuciones Marginales}
+
+\textbf{Marginal de $X$:}
+\[
+  p_X(0)=0.45,\quad p_X(1)=0.40,\quad p_X(2)=0.15.
+\]
+
+\textbf{Marginal de $Y$:}
+\[
+  p_Y(0)=0.50,\quad p_Y(1)=0.35,\quad p_Y(2)=0.15.
+\]
+
+\subsection{Verificación de Independencia}
+
+Se verifica si $p(0,0) = p_X(0)\cdot p_Y(0)$:
+\[
+  p_X(0)\cdot p_Y(0) = 0.45 \times 0.50 = 0.225 \neq 0.30 = p(0,0).
+\]
+$\therefore$ $X$ e $Y$ \textbf{no son independientes}.
+
+\subsection{Esperanzas y Varianzas}
+
+\[
+  E[X] = 0(0.45)+1(0.40)+2(0.15) = 0.70
+\]
+\[
+  E[X^2] = 0(0.45)+1(0.40)+4(0.15) = 1.00 \quad\Rightarrow\quad
+  \text{Var}(X) = 1.00 - 0.49 = 0.51
+\]
+\[
+  E[Y] = 0(0.50)+1(0.35)+2(0.15) = 0.65
+\]
+\[
+  E[Y^2] = 0+0.35+0.60 = 0.95 \quad\Rightarrow\quad
+  \text{Var}(Y) = 0.95 - 0.4225 = 0.5275
+\]
+
+\subsection{Covarianza y Correlación}
+
+\[
+  E[XY] = \sum_{x,y} xy\,p(x,y)
+  = 1\!\cdot\!1(0.20)+1\!\cdot\!2(0.05)+2\!\cdot\!1(0.05)+2\!\cdot\!2(0.05)
+  = 0.20+0.10+0.10+0.20 = 0.60
+\]
+\[
+  \text{Cov}(X,Y) = 0.60 - (0.70)(0.65) = 0.60 - 0.455 = \mathbf{0.145}
+\]
+\[
+  \rho_{XY} = \frac{0.145}{\sqrt{0.51\times 0.5275}}
+            = \frac{0.145}{\sqrt{0.2690}}
+            = \frac{0.145}{0.5187}
+            \approx \mathbf{0.2796}
+\]
+
+La correlación positiva moderada indica que cuando aumentan los defectos en
+el turno mañana, tienden a aumentar también en el turno tarde.
+
+% ────────────────────────────────────────────────────────────────────────────
+\section{Probabilidades Condicionales}
+
+La distribución condicional de $Y$ dado $X=1$ es:
+\[
+  P(Y=y \mid X=1) = \frac{p(1,y)}{p_X(1)}
+\]
+\[
+  P(Y=0\mid X=1)=\frac{0.15}{0.40}=0.375, \quad
+  P(Y=1\mid X=1)=\frac{0.20}{0.40}=0.500, \quad
+  P(Y=2\mid X=1)=\frac{0.05}{0.40}=0.125.
+\]
+
+La esperanza condicional:
+\[
+  E[Y\mid X=1] = 0(0.375)+1(0.500)+2(0.125) = 0.750.
+\]
+
+% ────────────────────────────────────────────────────────────────────────────
+\section{Validación con Python}
+
+El script \texttt{T3\_App1\_Discreta.py} (adjunto) reproduce todos los
+cálculos anteriores y genera:
+
+\begin{itemize}
+  \item \textbf{Figura 1:} Gráfico de barras 3D de la distribución conjunta.
+  \item \textbf{Figura 2:} Distribuciones marginales comparadas.
+  \item \textbf{Figura 3:} Distribución condicional $P(Y\mid X=1)$.
+\end{itemize}
+
+Los resultados numéricos del script coinciden exactamente con los valores
+obtenidos de forma analítica en las secciones anteriores.
+
+% ────────────────────────────────────────────────────────────────────────────
+\section{Conclusiones}
+
+\begin{enumerate}
+  \item La tabla de probabilidad conjunta es válida: suma 1 y todas las
+        entradas son no negativas.
+  \item Las variables $X$ e $Y$ \textbf{no son independientes}, lo que
+        refleja que los procesos de los dos turnos están relacionados
+        (e.g., misma maquinaria, mismos insumos).
+  \item La covarianza positiva ($\text{Cov}=0.145$) y la correlación
+        $\rho\approx 0.28$ cuantifican esta dependencia.
+  \item La distribución condicional permite tomar decisiones: si el turno
+        mañana produce 1 defecto, la probabilidad de que el turno tarde
+        produzca 1 defecto sube al 50\%.
+\end{enumerate}
+
+\end{document}

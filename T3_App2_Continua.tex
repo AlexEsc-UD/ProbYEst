@@ -1,0 +1,253 @@
+\documentclass[12pt,a4paper]{article}
+
+% Paquetes
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+
+\geometry{margin=2.5cm}
+
+\definecolor{azuluni}{RGB}{0,70,127}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\textcolor{azuluni}{\small T3 -- Probabilidad Conjunta}}
+\lhead{\textcolor{azuluni}{\small Caso Continuo}}
+\rfoot{\thepage}
+
+\titleformat{\section}{\large\bfseries\color{azuluni}}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries\color{azuluni}}{}{0em}{}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering
+  \vspace*{2cm}
+  {\color{azuluni}\rule{\linewidth}{1.5pt}}\\[0.5cm]
+  {\LARGE\bfseries\color{azuluni}
+   Aplicacion 2: Funcion de Densidad Conjunta\\[0.3cm]
+   Caso Continuo}\\[0.3cm]
+  {\color{azuluni}\rule{\linewidth}{1.5pt}}\\[1.5cm]
+  {\large\bfseries Tarea T3 -- Probabilidad Conjunta}\\[0.4cm]
+  {\large Probabilidad y Estadistica}\\[2cm]
+  \begin{tabular}{ll}
+    \textbf{Contexto:}     & Reactor quimico: tiempo de reaccion y temperatura \\[0.2cm]
+    \textbf{Variables:}    & $X$: tiempo normalizado, $Y$: temperatura normalizada \\[0.2cm]
+    \textbf{f.d.p.:}       & $f(x,y) = x + y$, \quad $(x,y)\in[0,1]\times[0,1]$ \\[0.2cm]
+    \textbf{Herramientas:} & \LaTeX{} + Python (numpy, scipy, matplotlib) \\
+  \end{tabular}
+  \vfill
+  {\small\color{gray} Generado con \LaTeX{} y validado con Python}
+\end{titlepage}
+
+% ============================================================
+\section{Planteamiento del Problema}
+
+En un reactor quimico se normalizan al intervalo $[0,1]$ dos variables:
+\begin{itemize}
+  \item $X$: fraccion del tiempo de reaccion.
+  \item $Y$: exceso de temperatura normalizado.
+\end{itemize}
+
+La \textbf{funcion de densidad de probabilidad conjunta} es:
+\[
+  \boxed{f(x,y) = x + y, \qquad 0 \leq x \leq 1,\; 0 \leq y \leq 1.}
+\]
+
+% ============================================================
+\section{Marco Teorico}
+
+\subsection{Definicion -- Densidad Conjunta}
+
+$f:\mathbb{R}^{2}\to\mathbb{R}$ es densidad conjunta si:
+\[
+  f(x,y)\geq 0 \quad\forall\,(x,y), \qquad
+  \int_{-\infty}^{+\infty}\!\int_{-\infty}^{+\infty} f(x,y)\,dx\,dy = 1.
+\]
+
+\subsection{Marginales}
+
+\[
+  f_X(x) = \int_{-\infty}^{+\infty} f(x,y)\,dy, \qquad
+  f_Y(y) = \int_{-\infty}^{+\infty} f(x,y)\,dx.
+\]
+
+\subsection{Independencia}
+
+$X\perp Y \iff f(x,y)=f_X(x)\cdot f_Y(y)\;\;\forall\,(x,y)$.
+
+\subsection{Momentos}
+
+\[
+  E[X]=\iint x\,f\,dx\,dy,\quad
+  \mathrm{Var}(X)=E[X^{2}]-(E[X])^{2},\quad
+  \mathrm{Cov}(X,Y)=E[XY]-E[X]\,E[Y].
+\]
+\[
+  \rho_{XY}=\frac{\mathrm{Cov}(X,Y)}{\sqrt{\mathrm{Var}(X)\,\mathrm{Var}(Y)}}.
+\]
+
+\subsection{Densidad Condicional}
+
+\[
+  f_{Y\mid X}(y\mid x) = \frac{f(x,y)}{f_X(x)},\quad f_X(x)>0.
+\]
+
+% ============================================================
+\section{Desarrollo Analitico}
+
+\subsection{Verificacion de la Densidad}
+
+\begin{align*}
+  \int_0^1\!\int_0^1 (x+y)\,dy\,dx
+  &=\int_0^1\Bigl[xy+\tfrac{y^2}{2}\Bigr]_0^1 dx
+   =\int_0^1\Bigl(x+\tfrac{1}{2}\Bigr)dx
+   =\Bigl[\tfrac{x^2}{2}+\tfrac{x}{2}\Bigr]_0^1
+   =\tfrac{1}{2}+\tfrac{1}{2}=\mathbf{1}\;\checkmark
+\end{align*}
+
+\subsection{Densidades Marginales}
+
+\[
+  f_X(x)=\int_0^1(x+y)\,dy=x+\tfrac{1}{2},\quad 0\leq x\leq 1.
+\]
+\[
+  f_Y(y)=\int_0^1(x+y)\,dx=\tfrac{1}{2}+y,\quad 0\leq y\leq 1.
+\]
+
+\subsection{Verificacion de Independencia}
+
+\[
+  f_X(x)\cdot f_Y(y)=\Bigl(x+\tfrac{1}{2}\Bigr)\!\Bigl(\tfrac{1}{2}+y\Bigr)
+  =xy+\tfrac{x}{2}+\tfrac{y}{2}+\tfrac{1}{4}
+  \;\neq\; x+y = f(x,y).
+\]
+$\therefore$ $X$ e $Y$ \textbf{no son independientes}.
+
+\subsection{Esperanzas y Varianzas}
+
+\[
+  E[X]=\int_0^1 x\Bigl(x+\tfrac{1}{2}\Bigr)dx
+      =\Bigl[\tfrac{x^3}{3}+\tfrac{x^2}{4}\Bigr]_0^1
+      =\tfrac{1}{3}+\tfrac{1}{4}=\frac{7}{12}\approx 0.5833.
+\]
+\[
+  E[X^2]=\int_0^1 x^2\Bigl(x+\tfrac{1}{2}\Bigr)dx
+        =\Bigl[\tfrac{x^4}{4}+\tfrac{x^3}{6}\Bigr]_0^1
+        =\tfrac{1}{4}+\tfrac{1}{6}=\frac{5}{12}.
+\]
+\[
+  \mathrm{Var}(X)=\tfrac{5}{12}-\Bigl(\tfrac{7}{12}\Bigr)^{\!2}
+                =\tfrac{5}{12}-\tfrac{49}{144}
+                =\frac{60-49}{144}=\frac{11}{144}\approx 0.0764.
+\]
+Por simetria: $E[Y]=\tfrac{7}{12}$,\; $\mathrm{Var}(Y)=\tfrac{11}{144}$.
+
+\subsection{Covarianza y Correlacion}
+
+\begin{align*}
+  E[XY]&=\int_0^1\!\int_0^1 xy(x+y)\,dy\,dx
+         =\int_0^1\!\int_0^1(x^2y+xy^2)\,dy\,dx \\
+       &=\int_0^1\Bigl(\tfrac{x^2}{2}+\tfrac{x}{3}\Bigr)dx
+         =\Bigl[\tfrac{x^3}{6}+\tfrac{x^2}{6}\Bigr]_0^1
+         =\frac{1}{3}.
+\end{align*}
+\[
+  \mathrm{Cov}(X,Y)=\tfrac{1}{3}-\Bigl(\tfrac{7}{12}\Bigr)^{\!2}
+                  =\tfrac{48-49}{144}=-\frac{1}{144}\approx -0.0069.
+\]
+\[
+  \rho_{XY}=\frac{-1/144}{11/144}=-\frac{1}{11}\approx \mathbf{-0.0909}.
+\]
+
+La correlacion negativa debil indica que, dentro del rango normalizado,
+mayor tiempo de reaccion se asocia ligeramente con menor temperatura
+(equilibrio termico progresivo).
+
+\subsection{Densidad Condicional $f_{Y\mid X}(y\mid x=0.5)$}
+
+\[
+  f_X(0.5)=0.5+0.5=1.
+\]
+\[
+  f_{Y\mid X}(y\mid 0.5)=\frac{0.5+y}{1}=0.5+y,\quad 0\leq y\leq 1.
+\]
+\[
+  E[Y\mid X=0.5]=\int_0^1 y(0.5+y)\,dy
+                =\Bigl[\tfrac{y^2}{4}+\tfrac{y^3}{3}\Bigr]_0^1
+                =\tfrac{1}{4}+\tfrac{1}{3}=\frac{7}{12}\approx 0.5833.
+\]
+
+% ============================================================
+\section{Calculo de Probabilidades}
+
+\[
+  P(X\leq 0.5,\;Y\leq 0.5)
+  =\int_0^{0.5}\!\int_0^{0.5}(x+y)\,dy\,dx
+  =\int_0^{0.5}\Bigl(\tfrac{x}{2}+\tfrac{1}{8}\Bigr)dx
+  =\Bigl[\tfrac{x^2}{4}+\tfrac{x}{8}\Bigr]_0^{0.5}
+  =\tfrac{1}{16}+\tfrac{1}{16}=\frac{1}{8}=0.125.
+\]
+
+% ============================================================
+\section{Resumen de Resultados}
+
+\begin{table}[H]
+\centering
+\caption{Resultados analiticos vs.\ numericos (Python)}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Cantidad} & \textbf{Exacto} & \textbf{Python} \\
+\midrule
+$\int\!\!\int f\,dx\,dy$                     & $1$                     & $1.000000$ \\
+$E[X]=E[Y]$                                  & $7/12 \approx 0.5833$   & $0.583333$ \\
+$\mathrm{Var}(X)=\mathrm{Var}(Y)$           & $11/144\approx 0.0764$  & $0.076389$ \\
+$E[XY]$                                      & $1/3\approx 0.3333$     & $0.333333$ \\
+$\mathrm{Cov}(X,Y)$                         & $-1/144\approx -0.0069$ & $-0.006944$\\
+$\rho_{XY}$                                  & $-1/11\approx -0.0909$  & $-0.090909$\\
+$P(X\leq 0.5,Y\leq 0.5)$                   & $1/8 = 0.125$           & $0.125000$ \\
+$E[Y\mid X=0.5]$                            & $7/12\approx 0.5833$    & $0.583333$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================
+\section{Validacion con Python}
+
+El script \texttt{T3\_App2\_Continua.py} adjunto:
+\begin{enumerate}
+  \item Verifica $\iint f\,dx\,dy=1$ con \texttt{scipy.integrate.dblquad}.
+  \item Calcula todos los momentos numericamente y los compara con los
+        valores exactos (concordancia hasta 6 cifras decimales).
+  \item Confirma la no independencia evaluando $f(x,y)$ vs.\
+        $f_X(x)\cdot f_Y(y)$.
+  \item Genera: superficie 3D, mapa de calor (contour), marginales y
+        densidad condicional $f_{Y\mid X=0.5}$.
+\end{enumerate}
+
+% ============================================================
+\section{Conclusiones}
+
+\begin{enumerate}
+  \item $f(x,y)=x+y$ es una densidad valida: no negativa e integra a 1.
+  \item $X$ e $Y$ \textbf{no son independientes}: el producto de marginales
+        difiere de $f(x,y)$.
+  \item La correlacion $\rho=-1/11\approx -0.091$ es negativa y debil,
+        indicando una ligera dependencia inversa entre las dos variables.
+  \item La densidad condicional $f_{Y\mid X=0.5}(y)=0.5+y$ es lineal
+        creciente en $[0,1]$, lo que facilita el calculo de probabilidades
+        condicionales de forma analitica.
+  \item Los resultados de Python confirman exactamente los valores
+        analiticos, validando el desarrollo matematico completo.
+\end{enumerate}
+
+\end{document}
