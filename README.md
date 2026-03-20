@@ -27,15 +27,20 @@ Repositorio de talleres y actividades del curso de **Probabilidad y Estadística
 ## 📁 Estructura del Repositorio
 
 ```
-📦 probabilidad-estadistica
+📦 ProbabilidadYEstadisticaDistrital
  ┣ 📂 T1/
- ┣ 📂 T2/
  ┣ 📂 T3/
- ┃ ┣ 📄 T3_App2_Continua.tex
- ┃ ┗ 📄 T3_App2_Continua.py
+ ┃ ┣ 📄 T3___App1___Discreto.pdf
+ ┃ ┣ 📄 T3___App2___Continuo.pdf
+ ┃ ┣ 📄 T3_App1_Discreta.py
+ ┃ ┣ 📄 T3_App1_Discreta.tex
+ ┃ ┣ 📄 T3_App2_Continua.py
+ ┃ ┗ 📄 T3_App2_Continua.tex
  ┣ 📂 T4/
+ ┃ ┣ 📄 T4___Distribuciones___Al....pdf
+ ┃ ┣ 📄 T4_Distribuciones.py
  ┃ ┣ 📄 T4_Distribuciones.tex
- ┃ ┗ 📄 T4_Distribuciones.py
+ ┃ ┗ 📄 T4_graficas.png
  ┗ 📄 README.md
 ```
 
@@ -55,11 +60,11 @@ Repositorio de talleres y actividades del curso de **Probabilidad y Estadística
 
 | Taller | Tema | Estado |
 |---|---|---|
-| T1 | — | — |
-| T2 | — | — |
-| T3 | Función de Densidad Conjunta (Caso Continuo) | ✅ Entregado |
+| T1 | Ejercicios propuestos en clase | ✅ Entregado |
+| T2 | — | ❌ Perdido |
+| T3 | Función de Densidad Conjunta (Caso Discreto y Continuo) | ✅ Entregado |
 | T4 | Distribuciones: Binomial, Poisson, Normal | ✅ Entregado |
 
 ---
 
-*Universidad — Ingeniería*
+*Universidad Distrital Francisco José de Caldas — Ingeniería*
