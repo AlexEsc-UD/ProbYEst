@@ -29,9 +29,10 @@ Repositorio de talleres y actividades del curso de **Probabilidad y Estadística
 ```
 📦 ProbabilidadYEstadisticaDistrital
  ┣ 📂 T1/
+ ┃ ┣ 📄 Taller 1 - Alejandr....pdf
  ┣ 📂 T3/
- ┃ ┣ 📄 T3___App1___Discreto.pdf
- ┃ ┣ 📄 T3___App2___Continuo.pdf
+ ┃ ┣ 📄 T3___App1___Discreto....pdf
+ ┃ ┣ 📄 T3___App2___Continuo....pdf
  ┃ ┣ 📄 T3_App1_Discreta.py
  ┃ ┣ 📄 T3_App1_Discreta.tex
  ┃ ┣ 📄 T3_App2_Continua.py
