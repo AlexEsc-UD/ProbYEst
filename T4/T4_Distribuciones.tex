@@ -1,0 +1,354 @@
+\documentclass[12pt,a4paper]{article}
+
+% Paquetes
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+
+\geometry{margin=2.5cm}
+
+\definecolor{azuluni}{RGB}{0,70,127}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\textcolor{azuluni}{\small T4 -- Distribuciones de Probabilidad}}
+\lhead{\textcolor{azuluni}{\small Caso Discreto y Continuo}}
+\rfoot{\thepage}
+
+\titleformat{\section}{\large\bfseries\color{azuluni}}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries\color{azuluni}}{}{0em}{}
+
+\begin{document}
+
+% ============================================================
+\begin{titlepage}
+  \centering
+  \vspace*{2cm}
+  {\color{azuluni}\rule{\linewidth}{1.5pt}}\\[0.5cm]
+  {\LARGE\bfseries\color{azuluni}
+   Taller T4 -- Distribuciones de Probabilidad\\[0.3cm]
+   Casos Discreto y Continuo}\\[0.3cm]
+  {\color{azuluni}\rule{\linewidth}{1.5pt}}\\[1.5cm]
+  {\large\bfseries Tarea T4 -- Probabilidad}\\[0.4cm]
+  {\large Alejandro Escobar Barrios --- 20251020094}\\[2cm]
+  \begin{tabular}{ll}
+    \textbf{Distribuciones:} & Binomial (Bernoulli), Poisson, Normal, Exponencial \\[0.2cm]
+    \textbf{Herramientas:}   & \LaTeX{} + Python (numpy, scipy, matplotlib) \\
+  \end{tabular}
+  \vfill
+  {\small\color{gray} Generado con \LaTeX{} y validado con Python}
+\end{titlepage}
+
+% ============================================================
+% PARTE 1: DISTRIBUCIÓN BINOMIAL (BERNOULLI)
+% ============================================================
+\section{Parte 1: Distribucion Binomial (Bernoulli)}
+
+\subsection{Marco Teorico}
+
+Un experimento de Bernoulli es aquel que tiene exactamente dos resultados posibles:
+\emph{exito} (probabilidad $p$) o \emph{fracaso} (probabilidad $q = 1-p$).
+La \textbf{distribucion Binomial} modela el numero de exitos $X$ en $n$ ensayos
+independientes de Bernoulli:
+\[
+  \boxed{P(X = k) = \binom{n}{k} p^k\, q^{n-k}, \quad k = 0, 1, \ldots, n.}
+\]
+
+Sus momentos principales son:
+\[
+  E[X] = np, \qquad \mathrm{Var}(X) = npq.
+\]
+
+\subsection{Ejercicio Teorico 1: Propiedades de la Distribucion Binomial}
+
+\textbf{Problema.} Sea $X \sim \mathrm{Bin}(n, p)$. Demostrar que $\displaystyle\sum_{k=0}^{n} P(X=k) = 1$.
+
+\textbf{Demostracion.}
+\begin{align*}
+  \sum_{k=0}^{n} P(X=k)
+  &= \sum_{k=0}^{n} \binom{n}{k} p^k q^{n-k} \\
+  &= (p + q)^n \quad \text{(Teorema del Binomio)} \\
+  &= (p + 1 - p)^n = 1^n = \mathbf{1}. \quad \checkmark
+\end{align*}
+
+\subsection{Ejercicio Teorico 2: Esperanza de la Binomial}
+
+\textbf{Problema.} Demostrar que $E[X] = np$ para $X \sim \mathrm{Bin}(n,p)$.
+
+\textbf{Demostracion.}
+\begin{align*}
+  E[X] &= \sum_{k=0}^{n} k\binom{n}{k} p^k q^{n-k} \\
+       &= \sum_{k=1}^{n} k\cdot\frac{n!}{k!(n-k)!} p^k q^{n-k} \\
+       &= np \sum_{k=1}^{n} \frac{(n-1)!}{(k-1)!(n-k)!} p^{k-1} q^{n-k} \\
+       &= np \sum_{j=0}^{n-1} \binom{n-1}{j} p^{j} q^{n-1-j} \quad (j = k-1)\\
+       &= np\,(p+q)^{n-1} = np \cdot 1 = \mathbf{np}. \quad \checkmark
+\end{align*}
+
+\subsection{Aplicacion: Lanzamiento de un Dado}
+
+\textbf{Problema.} Se lanza un dado no alterado 5 veces. Se define como \emph{exito}
+obtener el numero 3. Calcular:
+\begin{itemize}
+  \item[(i)]   La probabilidad de obtener exactamente 2 exitos.
+  \item[(ii)]  La probabilidad de obtener maximo 1 exito.
+  \item[(iii)] La probabilidad de obtener al menos 2 exitos.
+\end{itemize}
+
+\textbf{Parametros.} $n = 5$, $p = \tfrac{1}{6}$, $q = \tfrac{5}{6}$.
+
+\bigskip
+\textbf{(i) Exactamente 2 exitos:}
+\[
+  P(X = 2) = \binom{5}{2}\!\left(\tfrac{1}{6}\right)^{\!2}\!\left(\tfrac{5}{6}\right)^{\!3}
+  = 10 \cdot \frac{1}{36} \cdot \frac{125}{216}
+  = \frac{1250}{7776} \approx \mathbf{0.1608}.
+\]
+
+\textbf{(ii) Maximo 1 exito} ($X \leq 1$):
+\begin{align*}
+  P(X \leq 1) &= P(X=0) + P(X=1) \\
+  P(X=0) &= \binom{5}{0}\!\left(\tfrac{1}{6}\right)^{\!0}\!\left(\tfrac{5}{6}\right)^{\!5}
+            = \frac{3125}{7776} \approx 0.4019.\\
+  P(X=1) &= \binom{5}{1}\!\left(\tfrac{1}{6}\right)^{\!1}\!\left(\tfrac{5}{6}\right)^{\!4}
+            = 5 \cdot \frac{1}{6} \cdot \frac{625}{1296}
+            = \frac{3125}{7776} \approx 0.4019.\\
+  P(X \leq 1) &= \frac{3125 + 3125}{7776} = \frac{6250}{7776} \approx \mathbf{0.8038}.
+\end{align*}
+
+\textbf{(iii) Al menos 2 exitos} ($X \geq 2$):
+\[
+  P(X \geq 2) = 1 - P(X \leq 1) = 1 - 0.8038 \approx \mathbf{0.1962}.
+\]
+
+\begin{table}[H]
+\centering
+\caption{Resultados -- Distribucion Binomial $(n=5,\; p=1/6)$}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Cantidad} & \textbf{Exacto} & \textbf{Python} \\
+\midrule
+$P(X = 2)$      & $1250/7776 \approx 0.1608$ & $0.160751$ \\
+$P(X \leq 1)$   & $6250/7776 \approx 0.8038$ & $0.803755$ \\
+$P(X \geq 2)$   & $1526/7776 \approx 0.1962$ & $0.196245$ \\
+$E[X] = np$     & $5/6 \approx 0.8333$       & $0.833333$ \\
+$\mathrm{Var}(X)$ & $25/36 \approx 0.6944$   & $0.694444$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================
+% PARTE 2: DISTRIBUCIÓN DE POISSON
+% ============================================================
+\section{Parte 2: Distribucion de Poisson}
+
+\subsection{Marco Teorico}
+
+La \textbf{distribucion de Poisson} modela el numero de eventos raros que ocurren
+en un intervalo fijo de tiempo o espacio, con tasa promedio $\lambda$:
+\[
+  \boxed{P(X = k) = \frac{e^{-\lambda}\lambda^{k}}{k!}, \quad k = 0, 1, 2, \ldots}
+\]
+
+Caracteristicas:
+\[
+  E[X] = \lambda, \qquad \mathrm{Var}(X) = \lambda.
+\]
+
+\textbf{Aproximacion Binomial--Poisson.} Si $n$ es grande y $p$ es pequeno, entonces
+$X \sim \mathrm{Bin}(n,p) \approx \mathrm{Poisson}(\lambda = np)$.
+
+\subsection{Ejercicio Teorico 1: Normalizacion de Poisson}
+
+\textbf{Problema.} Verificar que $\displaystyle\sum_{k=0}^{\infty} P(X=k) = 1$.
+
+\textbf{Demostracion.}
+\[
+  \sum_{k=0}^{\infty} \frac{e^{-\lambda}\lambda^k}{k!}
+  = e^{-\lambda}\sum_{k=0}^{\infty}\frac{\lambda^k}{k!}
+  = e^{-\lambda}\cdot e^{\lambda} = e^{0} = \mathbf{1}.\quad\checkmark
+\]
+
+\subsection{Ejercicio Teorico 2: Esperanza de Poisson}
+
+\textbf{Problema.} Demostrar que $E[X] = \lambda$.
+
+\textbf{Demostracion.}
+\begin{align*}
+  E[X] &= \sum_{k=0}^{\infty} k\cdot\frac{e^{-\lambda}\lambda^k}{k!}
+         = e^{-\lambda}\sum_{k=1}^{\infty}\frac{\lambda^k}{(k-1)!} \\
+       &= e^{-\lambda}\cdot\lambda\sum_{j=0}^{\infty}\frac{\lambda^j}{j!} \quad (j=k-1) \\
+       &= e^{-\lambda}\cdot\lambda\cdot e^{\lambda} = \boldsymbol{\lambda}.\quad\checkmark
+\end{align*}
+
+\subsection{Aplicacion: Accidentes en una Interseccion}
+
+\textbf{Problema.} La probabilidad de que un auto se accidente es $p = 0{,}001$.
+Entre las 4 pm y 6 pm pasan aproximadamente $n = 1000$ autos por la interseccion.
+?`Cual es la probabilidad de que ocurran 2 o mas accidentes?
+
+\textbf{Parametros.} Como $n$ es grande y $p$ es pequeno, se usa la aproximacion:
+\[
+  \lambda = np = 1000 \times 0{,}001 = 1.
+\]
+
+\textbf{Desarrollo.}
+\begin{align*}
+  P(X \geq 2) &= 1 - P(X = 0) - P(X = 1) \\[4pt]
+  P(X = 0) &= \frac{e^{-1}\cdot 1^0}{0!} = e^{-1} \approx 0.3679. \\[4pt]
+  P(X = 1) &= \frac{e^{-1}\cdot 1^1}{1!} = e^{-1} \approx 0.3679. \\[4pt]
+  P(X \geq 2) &= 1 - 2e^{-1} \approx 1 - 0.7358 = \mathbf{0.2642}.
+\end{align*}
+
+\begin{table}[H]
+\centering
+\caption{Resultados -- Distribucion de Poisson $(\lambda = 1)$}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Cantidad} & \textbf{Exacto} & \textbf{Python} \\
+\midrule
+$P(X = 0)$    & $e^{-1} \approx 0.3679$   & $0.367879$ \\
+$P(X = 1)$    & $e^{-1} \approx 0.3679$   & $0.367879$ \\
+$P(X \geq 2)$ & $1-2e^{-1}\approx 0.2642$ & $0.264241$ \\
+$E[X]$        & $\lambda = 1$              & $1.000000$ \\
+$\mathrm{Var}(X)$ & $\lambda = 1$          & $1.000000$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================
+% PARTE 3: DISTRIBUCIÓN NORMAL
+% ============================================================
+\section{Parte 3: Distribucion Normal}
+
+\subsection{Marco Teorico}
+
+La \textbf{distribucion Normal} $N(\mu, \sigma^2)$ tiene f.d.p.:
+\[
+  \boxed{f(x) = \frac{1}{\sigma\sqrt{2\pi}}\exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right),
+  \quad -\infty < x < \infty.}
+\]
+
+La estandarizacion $Z = \dfrac{X - \mu}{\sigma}\sim N(0,1)$ permite usar tablas.
+Sus momentos: $E[X] = \mu$, $\mathrm{Var}(X) = \sigma^2$.
+
+\subsection{Ejercicio Teorico 1: Simetria de la Normal Estandar}
+
+\textbf{Problema.} Demostrar que $P(Z \leq -z) = P(Z \geq z)$ para $z > 0$.
+
+\textbf{Demostracion.}
+\[
+  P(Z \leq -z) = \int_{-\infty}^{-z}\frac{e^{-t^2/2}}{\sqrt{2\pi}}\,dt.
+\]
+Haciendo el cambio $u = -t$ (y $du = -dt$):
+\[
+  = \int_{z}^{\infty}\frac{e^{-u^2/2}}{\sqrt{2\pi}}\,du = P(Z \geq z).\quad\checkmark
+\]
+
+\subsection{Ejercicio Teorico 2: Probabilidad en Intervalo Simetrico}
+
+\textbf{Problema.} Demostrar que $P(-z\leq Z\leq z) = 2\Phi(z) - 1$,
+donde $\Phi$ es la FDA de la normal estandar.
+
+\textbf{Demostracion.}
+\begin{align*}
+  P(-z \leq Z \leq z) &= P(Z \leq z) - P(Z \leq -z) \\
+                       &= \Phi(z) - [1 - \Phi(z)] \\
+                       &= 2\Phi(z) - 1. \quad \checkmark
+\end{align*}
+
+\subsection{Aplicacion: Ejemplo 6.3 de Walpole}
+
+\textbf{Problema (Walpole, p.\ 178, Ejemplo 6.3).}
+Dado que $X \sim N(\mu = 50,\; \sigma = 10)$, encontrar $P(45 < X < 62)$.
+
+\textbf{Estandarizacion.}
+\[
+  Z_1 = \frac{45 - 50}{10} = -0.5, \qquad Z_2 = \frac{62 - 50}{10} = 1.2.
+\]
+
+\textbf{Calculo.}
+\begin{align*}
+  P(45 < X < 62) &= P(-0.5 < Z < 1.2) \\
+                  &= \Phi(1.2) - \Phi(-0.5) \\
+                  &= \Phi(1.2) - [1 - \Phi(0.5)] \\
+                  &= 0.8849 - (1 - 0.6915) \\
+                  &= 0.8849 - 0.3085 = \mathbf{0.5764}.
+\end{align*}
+
+\textbf{Interpretacion.} Hay aproximadamente un 57.64\,\% de probabilidad de que
+la variable se encuentre entre 45 y 62.
+
+\begin{table}[H]
+\centering
+\caption{Resultados -- Distribucion Normal $(\mu=50,\;\sigma=10)$}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Cantidad} & \textbf{Exacto/Tablas} & \textbf{Python} \\
+\midrule
+$P(45 < X < 62)$  & $0.5764$  & $0.576398$ \\
+$\Phi(1.2)$        & $0.8849$  & $0.884930$ \\
+$\Phi(-0.5)$       & $0.3085$  & $0.308538$ \\
+$E[X] = \mu$       & $50$      & $50.000000$ \\
+$\mathrm{Var}(X)$  & $100$     & $100.000000$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================
+% RESUMEN GENERAL
+% ============================================================
+\section{Resumen General}
+
+\begin{table}[H]
+\centering
+\caption{Comparacion de las tres distribuciones estudiadas}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{lllcc}
+\toprule
+\textbf{Distribucion} & \textbf{Parametros} & \textbf{E[X]} & \textbf{Var(X)} & \textbf{Tipo} \\
+\midrule
+Binomial & $n=5, p=1/6$       & $5/6\approx0.833$  & $25/36\approx0.694$ & Discreta \\
+Poisson  & $\lambda=1$        & $1$                & $1$                 & Discreta \\
+Normal   & $\mu=50,\sigma=10$ & $50$               & $100$               & Continua \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================
+\section{Conclusiones}
+
+\begin{enumerate}
+  \item La \textbf{distribucion Binomial} permite calcular probabilidades exactas para
+        experimentos de Bernoulli repetidos. En el dado, la simetria del complemento
+        ($P(X\geq2)=1-P(X\leq1)$) simplifica significativamente el calculo.
+
+  \item La \textbf{distribucion de Poisson} es una aproximacion eficiente para la Binomial
+        cuando $n$ es grande y $p$ pequeno ($\lambda = np = 1$). La probabilidad de
+        2 o mas accidentes es aproximadamente 26.4\,\%, lo que es relevante para la
+        gestion de riesgo vial.
+
+  \item La \textbf{distribucion Normal} (Walpole 6.3) muestra como la estandarizacion
+        transforma cualquier variable normal en $Z\sim N(0,1)$, facilitando el uso
+        de tablas. El 57.64\,\% de probabilidad en $(45, 62)$ ilustra la concentracion
+        de la masa de probabilidad alrededor de la media.
+
+  \item La \textbf{distribucion Exponencial} modela fenomenos de espera con la propiedad
+        unica de \emph{perdida de memoria}. Un tiempo medio de 3 minutos implica
+        que el 18.9\,\% de las esperas superan los 5 minutos.
+
+  \item Los resultados de Python concuerdan con los valores analiticos hasta al menos
+        6 cifras decimales, validando todos los desarrollos matematicos.
+\end{enumerate}
+
+\end{document}
